@@ -1,7 +1,28 @@
 import FWCore.ParameterSet.Config as cms
-from  PhysicsTools.NanoAOD.common_cff import *
+from PhysicsTools.NanoAOD.common_cff import *
+from RecoJets.JetProducers.ak8PFJets_cfi  import ak8PFJetsPuppi,ak8PFJetsPuppiSoftDrop
+from RecoJets.JetProducers.ak8PFJetsPuppi_groomingValueMaps_cfi import ak8PFJetsPuppiSoftDropMass
+from PhysicsTools.PatAlgos.tools.jetTools import addJetCollection
+from PhysicsTools.PatAlgos.tools.helpers  import getPatAlgosToolsTask, addToProcessAndTask
+from PhysicsTools.PatAlgos.tools.jetCollectionTools import RecoJetAdder
+from PhysicsTools.PatAlgos.tools.jetTools import updateJetCollection
 
-def addPFCands(process, runOnMC=False, allPF = False, onlyAK4=False, onlyAK8=False):
+def ReclusterLSJets(proc, recoJA, runOnMC):
+    recoJetInfo = recoJA.addRecoJetCollection(proc, 
+                                              "ak8pfpuppi",
+                                              inputCollection = "",
+                                              genJetsCollection = cms.InputTag("slimmedGenJetsAK8"),
+                                              bTagDiscriminators = ['pfDeepCSVJetTags:probb',
+                                                                    'pfDeepCSVJetTags:probbb',
+                                                                    'pfBoostedDoubleSecondaryVertexAK8BJetTags'],
+                                          )
+
+def _addProcessAndTask(proc, label, module):
+    from PhysicsTools.PatAlgos.tools.helpers import getPatAlgosToolsTask, addToProcessAndTask
+    task = getPatAlgosToolsTask(proc)
+    addToProcessAndTask(label, module, proc, task)
+
+def addPFCands(process, runOnMC=False, allPF = False, onlyAK4=False, onlyAK8=False, addLS=False):
     process.customizedPFCandsTask = cms.Task( )
     process.schedule.associate(process.customizedPFCandsTask)
 
@@ -71,12 +92,148 @@ def addPFCands(process, runOnMC=False, allPF = False, onlyAK4=False, onlyAK8=Fal
                                                         nameSV = cms.string("JetSVs"),
                                                         idx_nameSV = cms.string("sVIdx"),
                                                         )
+
+
+    jetCollection = 'FatJetLSCollection'
+    tagName = "FatJetLS"
+    postfix = "Recluster" 
+    task = getPatAlgosToolsTask(process)
+    addToProcessAndTask(jetCollection, ak8PFJetsPuppi.clone(src = cms.InputTag("customAK8ConstituentsTable:pfCandsNoLep")),
+                        process, task)
+    getattr(process, jetCollection).jetAlgorithm = 'AntiKt'
+    getattr(process, jetCollection).rParam = 0.8
+
+    addJetCollection(process,
+                     labelName          = "FatJetLS",
+                     postfix            = postfix,
+                     jetSource          = cms.InputTag(jetCollection),
+                     pvSource           = cms.InputTag("offlineSlimmedPrimaryVertices"),
+                     svSource           = cms.InputTag("slimmedSecondaryVertices"),
+                     muSource           = cms.InputTag("slimmedMuons"),
+                     elSource           = cms.InputTag("slimmedElectrons"),
+                     algo               = "AK",
+                     rParam             = 0.8,
+                     jetCorrections     = ('AK8PFPuppi', ['L2Relative', 'L3Absolute'], 'None'),
+                     pfCandidates       = cms.InputTag("customAK8ConstituentsTable:pfCandsNoLep"),
+                     genJetCollection   = cms.InputTag("slimmedGenJetsAK8"),
+                     genParticles       = cms.InputTag('prunedGenParticles'),
+                     getJetMCFlavour    = False,
+                     btagDiscriminators = ['pfDeepCSVJetTags:probb','pfDeepCSVJetTags:probbb','pfCombinedInclusiveSecondaryVertexV2BJetTags']
+    )
+
+    task = getPatAlgosToolsTask(process)
+    addToProcessAndTask(jetCollection+'SoftDrop',
+                        ak8PFJetsPuppiSoftDrop.clone( src =cms.InputTag("customAK8ConstituentsTable:pfCandsNoLep"),
+                                                      rParam=0.8,
+                                                      jetAlgorithm='AntiKt',
+                                                      useExplicitGhosts=True,
+                                                      R0= cms.double(0.8),
+                                                      zcut=0.1,
+                                                      beta=0,
+                                                      doAreaFastjet = cms.bool(True),
+                                                      writeCompound = cms.bool(True), 
+                                                      jetCollInstanceName=cms.string('SubJets') ),
+                        process, task)
+    task = getPatAlgosToolsTask(process)
+    addToProcessAndTask(jetCollection+'SoftDropMass',
+                        ak8PFJetsPuppiSoftDropMass.clone( src = cms.InputTag(jetCollection),
+                                                          matched = cms.InputTag( jetCollection+'SoftDrop'),
+                                                          distMax = cms.double(0.8)),
+                        process, task)
+    getattr(process,"patJetsFatJetLSRecluster").userData.userFloats.src = [jetCollection+'SoftDropMass']
+
+    addJetCollection(process,
+                     labelName          = "FatJetLSSubJets",
+                     postfix            = postfix,
+                     jetSource          = cms.InputTag(jetCollection+'SoftDrop','SubJets'),
+                     pvSource           = cms.InputTag("offlineSlimmedPrimaryVertices"),
+                     svSource           = cms.InputTag("slimmedSecondaryVertices"),
+                     algo               = 'AK',
+                     rParam             = 0.8,
+                     btagDiscriminators = ['pfDeepCSVJetTags:probb', 'pfDeepCSVJetTags:probbb','pfCombinedInclusiveSecondaryVertexV2BJetTags'],
+                     jetCorrections     = ('AK4PFPuppi', ['L2Relative', 'L3Absolute'], 'None'),
+                     explicitJTA        = True,  # needed for subjet b tagging                                                                                                                             
+                     svClustering       = True, # needed for subjet b tagging                                                                                                                              
+                     genJetCollection   = cms.InputTag('slimmedGenJetsAK8SoftDropSubJets'),
+                     genParticles       = cms.InputTag('prunedGenParticles'),
+                     getJetMCFlavour    = False,
+                     fatJets            = cms.InputTag(jetCollection),             # needed for subjet flavor clustering                                                                               
+                     groomedFatJets     = cms.InputTag(jetCollection+'SoftDrop') # needed for subjet flavor clustering                                                                                    
+                 )
+
+    selectedPatJetCollection = "selectedPatJets{}{}".format(tagName,postfix)
+
+    task = getPatAlgosToolsTask(process)
+    addToProcessAndTask(selectedPatJetCollection+"Packed",
+                        cms.EDProducer("BoostedJetMerger",
+                                       jetSrc=cms.InputTag(selectedPatJetCollection),
+                                       subjetSrc=cms.InputTag("patJetsFatJetLSSubJetsRecluster")),
+                        process, task)
+
+    task = getPatAlgosToolsTask(process)
+    addToProcessAndTask('packedPatJets'+'FatJetLS',
+                        cms.EDProducer("JetSubstructurePacker",
+                                       jetSrc=cms.InputTag(selectedPatJetCollection),
+                                       distMax = cms.double(0.8),
+                                       fixDaughters = cms.bool(False),
+                                       algoTags = cms.VInputTag(
+                                           cms.InputTag(selectedPatJetCollection+"Packed")
+                                       ), 
+                                       algoLabels =cms.vstring('SoftDrop')),
+                        process, task)
+
+    updateJetCollection(
+        process,
+        labelName          = "FatJetLS",
+        postfix            = "Final",
+        #jetSource          = cms.InputTag(selectedPatJetCollection),
+        jetSource          = cms.InputTag('packedPatJets'+'FatJetLS'),
+        rParam             = 0.8,
+        jetCorrections     = ('AK8PFPuppi', ['L2Relative', 'L3Absolute'], 'None'),
+        btagDiscriminators = ['pfDeepCSVJetTags:probb','pfDeepCSVJetTags:probbb','pfBoostedDoubleSecondaryVertexAK8BJetTags',
+                              'pfCombinedInclusiveSecondaryVertexV2BJetTags',
+                          ]
+    )
+
+    patJetFinalCollection="selectedUpdatedPatJets{}{}".format(tagName,"Final")
+
+    process.customAK8LSTable = cms.EDProducer("SimpleCandidateFlatTableProducer",
+                                              src= cms.InputTag("selectedUpdatedPatJetsFatJetLSFinal"),
+                                              cut = cms.string(""),
+                                              name = cms.string("FatJetLS"),
+                                              doc = cms.string("Lepton subtracted fat jets"),
+                                              singleton = cms.bool(False), # the number of entries is variable                                                                                    
+                                              extension = cms.bool(False), # this is the extension table for the AK8 constituents                                                                 
+                                              variables = cms.PSet(P4Vars,
+                                                                   nMuons = Var("?hasOverlaps('muons')?overlaps('muons').size():0", int, doc="number of muons in the jet"),
+                                                                   nElectrons = Var("?hasOverlaps('electrons')?overlaps('electrons').size():0", int, doc="number of electrons in the jet"),
+                                                                   msoftdropraw = Var("userFloat('FatJetLSCollectionSoftDropMass')", float, doc="raw soft drop mass",precision=10),
+                                                                   #msoftdrop = Var("groomedMass('')",float, doc="Corrected soft drop mass with PUPPI",precision=10),
+                                                               )
+                                          )
+
+    process.customAK8LSsubjetTable = cms.EDProducer("SimpleCandidateFlatTableProducer",
+                                                    src = cms.InputTag(jetCollection+'SoftDrop',"SubJets"),
+                                                    cut = cms.string(""), #probably already applied in miniaod
+                                                    name = cms.string("FatJetLSSubJet"),
+                                                    doc = cms.string("Lepton subtracted fat jets sub jets"),
+                                                    singleton = cms.bool(False), # the number of entries is variable
+                                                    extension = cms.bool(False), # this is the main table for the jets
+                                                    variables = cms.PSet(P4Vars,
+                                                                         #btagDeepB = Var("bDiscriminator('pfDeepCSVJetTags:probb')+bDiscriminator('pfDeepCSVJetTags:probbb')",float,doc="DeepCSV b+bb tag discriminator",precision=10),
+                                                                         #btagCSVV2 = Var("bDiscriminator('pfCombinedInclusiveSecondaryVertexV2BJetTags')",float,doc=" pfCombinedInclusiveSecondaryVertexV2 b-tag discriminator (aka CSVV2)",precision=10),
+     
+                                                                     )
+                                                )
+
     if not allPF:
         process.customizedPFCandsTask.add(process.finalJetsConstituents)
     process.customizedPFCandsTask.add(process.customConstituentsExtTable)
     process.customizedPFCandsTask.add(process.customAK8ConstituentsTable)
     process.customizedPFCandsTask.add(process.customAK4ConstituentsTable)
-    
+    process.customizedPFCandsTask.add(process.customAK8LSTable)
+    process.customizedPFCandsTask.add(process.customAK8LSsubjetTable)
+
     if runOnMC:
 
         process.genJetsAK8Constituents = cms.EDProducer("GenJetPackedConstituentPtrSelector",
