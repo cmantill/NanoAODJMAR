@@ -21,7 +21,7 @@ git cms-addpkg RecoBTag/Combined
 git cms-merge-topic andrzejnovak:DDXV2_106
 #git cms-merge-topic andrzejnovak:614nosort
 git clone https://github.com/cms-data/RecoBTag-Combined.git RecoBTag/Combined/data
-git clone https://github.com/cmantill/PFNano.git PhysicsTools/PFNano
+git clone https://github.com/cmantill/NanoAODJMAR.git PhysicsTools/NanoAODJMAR
 #git clone https://github.com/cms-jet/PFNano.git PhysicsTools/PFNano
 scram b -j 10
 cd PhysicsTools/PFNano/test
