@@ -88,7 +88,8 @@ public:
     
     for (unsigned int iE = 0; iE < han_electrons->size(); ++iE){
       const edm::Ptr<pat::Electron> lep(han_electrons, iE);
-      auto corrP4  = lep->p4() * lep->userFloat("ecalTrkEnergyPostCorr") / lep->energy();
+      //auto corrP4  = lep->p4() * lep->userFloat("ecalTrkEnergyPostCorr") / lep->energy();
+      auto corrP4  = lep->p4() / lep->energy();
       if(lep->pt() < e_pt && corrP4.pt() < e_pt) continue;
       if (std::fabs(lep->superCluster()->eta()) >= 2.5) continue;
       

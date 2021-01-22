@@ -187,7 +187,7 @@ def addNoLep(process, runOnMC=False):
         JETCorrLevels = ['L1FastJet','L2Relative','L3Absolute']
         if not runOnMC: JETCorrLevels.append('L2L3Residual')
         
-        from PhysicsTools.NanoAODJMAR.jetToolbox_cff import jetToolbox
+        from PhysicsTools.PFNano.jetToolbox_cff import jetToolbox
         jetToolbox(process, 'ak8',  'leptonSubtractedJetSequence','noOutput',PUMethod = 'Puppi', postFix='NoLep',
                    newPFCollection=True, nameNewPFCollection='leptonLesspuppi',
                    JETCorrPayload = 'AK8PFPuppi', JETCorrLevels = JETCorrLevels,

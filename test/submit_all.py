@@ -34,6 +34,7 @@ def getOptions() :
         help=("Lumi Mask JSON file"))
     parser.add_argument("--ext", '--extension', dest="extension",
         help=("Extension string to include in publication name"))
+    parser.add_argument("--private", action='store_true', default=False)
 
     parser.add_argument("--test-only", dest="test_only", action='store_true',
         help=("Submit only a few files to test process. Disable publication"))
@@ -96,7 +97,6 @@ def main():
     # config.JobType.maxJobRuntimeMin = 2750 #Default is 1315; 2750 minutes guaranteed to be available; Max I have used is 9000 
     config.JobType.numCores = 1
     config.JobType.allowUndistributedCMSSW = True
-
     config.section_("Debug")
     config.Debug.extraJDL = ['+CMS_ALLOW_OVERFLOW=False']
 
@@ -108,7 +108,8 @@ def main():
     if options.test_only:
         config.Data.totalUnits = 1
     config.Data.publishDBS = 'phys03'
-
+    if options.private:
+        config.Data.inputDBS = 'phys03'
     config.section_("Site")
     if options.remote:
         config.Site.whitelist = options.whitelist.split(',')
