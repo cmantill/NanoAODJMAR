@@ -1,6 +1,6 @@
 <use name="FWCore/Framework"/>
 <use name="FWCore/MessageLogger"/>
-<library file="*.cc" name="PhysicsToolsNanoAODJMARPlugins">
+<library file="*.cc" name="PhysicsToolsPFNanoPlugins">
   <use name="DataFormats/PatCandidates"/>
   <use name="DataFormats/VertexReco"/>
   <use name="DataFormats/NanoAOD"/>
