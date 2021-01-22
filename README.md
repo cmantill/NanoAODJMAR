@@ -11,12 +11,23 @@ This format can be used with [fastjet](http://fastjet.fr) directly.
 
 For **UL** 2016, 2017 and 2018 data and MC **NanoAODv8** according to the [XPOG](https://gitlab.cern.ch/cms-nanoAOD/nanoaod-doc/-/wikis/Releases/NanoAODv8) and [PPD](https://twiki.cern.ch/twiki/bin/view/CMS/PdmVRun2LegacyAnalysisSummaryTable) recommendations:
 
+(Using CMSSW_10_6_19 because it has PN already)
+
 ```
-cmsrel  CMSSW_10_6_20 # in principle not a constraint
-cd  CMSSW_10_6_20/src
+cmsrel  CMSSW_10_6_19
+cd CMSSW_10_6_19/src
 cmsenv
+<<<<<<< HEAD
 git cms-rebase-topic andrzejnovak:614nosort
 git clone https://github.com/cms-jet/PFNano.git PhysicsTools/PFNano
+=======
+git cms-addpkg PhysicsTools/NanoAOD
+git cms-addpkg RecoBTag/Combined
+#git cms-merge-topic andrzejnovak:DDXV2_106
+git cms-merge-topic andrzejnovak:614nosort
+git clone https://github.com/cms-data/RecoBTag-Combined.git RecoBTag/Combined/data
+git clone https://github.com/cmantill/PFNano.git PhysicsTools/PFNano
+#git clone https://github.com/cms-jet/PFNano.git PhysicsTools/PFNano
 scram b -j 10
 cd PhysicsTools/PFNano/test
 ```

@@ -86,6 +86,8 @@ JetConstituentTableProducer<T>::JetConstituentTableProducer(const edm::Parameter
   produces<nanoaod::FlatTable>(name_);
   produces<nanoaod::FlatTable>(nameSV_);
   produces<std::vector<reco::CandidatePtr>>();
+  produces<std::vector<reco::CandidatePtr>>("pfCandsNoLep");
+
 }
 
 template< typename T>
@@ -96,6 +98,7 @@ void JetConstituentTableProducer<T>::produce(edm::Event &iEvent, const edm::Even
   // elements in all these collections must have the same order!
   auto outCands = std::make_unique<std::vector<reco::CandidatePtr>>();
   auto outSVs = std::make_unique<std::vector<const reco::VertexCompositePtrCandidate *>> ();
+  auto outCandsNoLep = std::make_unique<std::vector<reco::CandidatePtr>>();
   std::vector<int> jetIdx_pf, jetIdx_sv, pfcandIdx, svIdx;
   // PF Cands
   std::vector<float> btagEtaRel, btagPtRatio, btagPParRatio, btagSip3dVal, btagSip3dSig, btagJetDistVal, cand_pt;
@@ -186,6 +189,9 @@ void JetConstituentTableProducer<T>::produce(edm::Event &iEvent, const edm::Even
         continue;
       }
       outCands->push_back(cand);
+      if (  std::abs(cand->pdgId()) != 11 && std::abs(cand->pdgId()) != 13){
+	outCandsNoLep->push_back(cand);
+      }
       jetIdx_pf.push_back(i_jet);
       pfcandIdx.push_back(candInNewList - candPtrs.begin());
       cand_pt.push_back(cand->pt());
@@ -254,6 +260,8 @@ void JetConstituentTableProducer<T>::produce(edm::Event &iEvent, const edm::Even
   iEvent.put(std::move(svTable), nameSV_);
 
   iEvent.put(std::move(outCands));
+  iEvent.put(std::move(outCandsNoLep), "pfCandsNoLep");
+
 }
 
 template< typename T>

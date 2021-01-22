@@ -1102,4 +1102,3 @@ def _addProcessAndTask(proc, label, module):
 	from PhysicsTools.PatAlgos.tools.helpers import getPatAlgosToolsTask, addToProcessAndTask
 	task = getPatAlgosToolsTask(proc)
 	addToProcessAndTask(label, module, proc, task)
-# vim: set ts=4 sw=4 tw=0 noet :
