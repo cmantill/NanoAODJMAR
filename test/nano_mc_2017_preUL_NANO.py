@@ -81,10 +81,12 @@ from PhysicsTools.NanoAOD.nano_cff import nanoAOD_customizeMC
 process = nanoAOD_customizeMC(process)
 
 # Automatic addition of the customisation function from PhysicsTools.NanoAODJMAR.nano_jmar_cff
-from PhysicsTools.NanoAODJMAR.nano_jmar_cff import JMARnano_customizeMC_noInputs 
+#from PhysicsTools.NanoAODJMAR.nano_jmar_cff import JMARnano_customizeMC_noInputs 
+from PhysicsTools.NanoAODJMAR.nano_jmar_cff import JMARnano_customizeMC_AK8JetsOnly
 
 #call to customisation function JMARnano_customizeMC_noInputs imported from PhysicsTools.NanoAODJMAR.nano_jmar_cff
-process = JMARnano_customizeMC_noInputs(process)
+#process = JMARnano_customizeMC_noInputs(process)
+process = JMARnano_customizeMC_AK8JetsOnly(process)
 
 # End of customisation functions
 
