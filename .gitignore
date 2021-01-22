@@ -102,3 +102,4 @@ ENV/
 
 # root files
 test/*.root
+python/__init__.py
