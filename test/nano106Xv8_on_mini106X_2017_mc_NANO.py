@@ -89,10 +89,10 @@ process = nanoAOD_customizeMC(process)
 from PhysicsTools.PFNano.pfnano_cff import PFnano_customizeMC, PFnano_customizeMC_allPF, PFnano_customizeMC_AK4JetsOnly, PFnano_customizeMC_AK8JetsOnly, PFnano_customizeMC_noInputs
 
 #call to customisation function PFnano_customizeMC imported from PhysicsTools.PFNano.pfnano_cff
-process = PFnano_customizeMC(process)
+#process = PFnano_customizeMC(process)
 #process = PFnano_customizeMC_allPF(process)
 #process = PFnano_customizeMC_AK4JetsOnly(process)
-#process = PFnano_customizeMC_AK8JetsOnly(process)
+process = PFnano_customizeMC_AK8JetsOnly(process)
 #process = PFnano_customizeMC_noInputs(process)
 
 # End of customisation functions
