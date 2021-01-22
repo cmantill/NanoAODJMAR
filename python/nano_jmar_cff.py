@@ -1,6 +1,7 @@
 import FWCore.ParameterSet.Config as cms
 from PhysicsTools.NanoAODJMAR.addPFCands_cff import addPFCands
 from PhysicsTools.NanoAODJMAR.addBTV import add_BTV
+from PhysicsTools.NanoAODJMAR.addLS_cff import addNoLep
 from PhysicsTools.NanoAOD.common_cff import Var
 
 
@@ -25,6 +26,7 @@ def JMARnano_customizeMC_AK4JetsOnly(process):
 
 def JMARnano_customizeMC_AK8JetsOnly(process):
     addPFCands(process, True, False, False, True)
+    addNoLep(process, True)
     add_BTV(process, True, False, True)
     process.NANOAODSIMoutput.fakeNameForCrab = cms.untracked.bool(True)  # needed for crab publication
     return process
@@ -55,6 +57,7 @@ def JMARnano_customizeData_AK4JetsOnly(process):
 
 def JMARnano_customizeData_AK8JetsOnly(process):
     addPFCands(process, False, False, False, True)
+    addNoLep(process, True)
     add_BTV(process, False, False, True)
     process.NANOAODSIMoutput.fakeNameForCrab = cms.untracked.bool(True)  # needed for crab publication
     return process
