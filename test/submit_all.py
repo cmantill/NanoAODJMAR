@@ -4,6 +4,7 @@ This is a small script that submits a config over many datasets
 """
 from __future__ import print_function
 import os
+import re
 import sys
 #from optparse import OptionParser
 import argparse
@@ -95,7 +96,7 @@ def main():
     config.JobType.maxMemoryMB = 5000 # Default is 2500 : Max I have used is 13000
     # minutes tied to not automatic splitting
     # config.JobType.maxJobRuntimeMin = 2750 #Default is 1315; 2750 minutes guaranteed to be available; Max I have used is 9000 
-    config.JobType.numCores = 1
+    config.JobType.numCores = 4
     config.JobType.allowUndistributedCMSSW = True
     config.section_("Debug")
     config.Debug.extraJDL = ['+CMS_ALLOW_OVERFLOW=False']
@@ -159,6 +160,7 @@ def main():
         config.Data.outputDatasetTag = re.sub(r'MiniAOD[v]?[0-9]?', options.extension, cond) if cond.startswith('RunII') else cond+'_'+options.extension
         print(config.Data.outputDatasetTag)
         config.Data.outLFNDirBase = options.out 
+        config.Data.splitting = 'Automatic'
         if datatier == 'MINIAODSIM':
         #   config.Data.splitting = 'FileBased'
         #   config.Data.unitsPerJob = 10
