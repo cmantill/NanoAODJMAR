@@ -160,7 +160,8 @@ def main():
         config.Data.outputDatasetTag = re.sub(r'MiniAOD[v]?[0-9]?', options.extension, cond) if cond.startswith('RunII') else cond+'_'+options.extension
         print(config.Data.outputDatasetTag)
         config.Data.outLFNDirBase = options.out 
-        config.Data.splitting = 'Automatic'
+        config.Data.splitting = 'FileBased'
+        config.Data.unitsPerJob = 10
         if datatier == 'MINIAODSIM':
         #   config.Data.splitting = 'FileBased'
         #   config.Data.unitsPerJob = 10
