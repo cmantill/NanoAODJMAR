@@ -53,6 +53,8 @@ def update_jets_AK8(process):
         'pfMassIndependentDeepDoubleCvLV2JetTags:probHcc',
         'pfMassIndependentDeepDoubleCvBV2JetTags:probHcc',
         ]
+    from RecoBTag.ONNXRuntime.pfDeepBoostedJet_cff import _pfDeepBoostedJetTagsProbs, _pfMassDecorrelatedDeepBoostedJetTagsProbs, _pfDeepBoostedJetTagsMetaDiscrs, _pfMassDecorrelatedDeepBoostedJetTagsMetaDiscrs
+    _btagDiscriminators += _pfDeepBoostedJetTagsProbs + _pfMassDecorrelatedDeepBoostedJetTagsProbs + _pfDeepBoostedJetTagsMetaDiscrs + _pfMassDecorrelatedDeepBoostedJetTagsMetaDiscrs
     from RecoBTag.ONNXRuntime.pfParticleNet_cff import _pfParticleNetJetTagsAll as pfParticleNetJetTagsAll
     _btagDiscriminators += pfParticleNetJetTagsAll
     updateJetCollection(
