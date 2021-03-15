@@ -5,7 +5,7 @@ from PhysicsTools.PFNano.addLS_cff import addNoLep
 from PhysicsTools.NanoAOD.common_cff import Var
 
 def PFnano_customizeMC(process):
-    addPFCands(process, runOnMC=True, saveAK4=True, saveAK8=True)
+    addPFCands(process, runOnMC=True, saveAK4=True, saveAK8=True, saveAK15=True)
     add_BTV(process, runOnMC=True)
     process.NANOAODSIMoutput.fakeNameForCrab = cms.untracked.bool(True)  # needed for crab publication
     return process
@@ -27,6 +27,12 @@ def PFnano_customizeMC_AK8JetsOnly(process):
     addPFCands(process, runOnMC=True, saveAK8=True)
     add_BTV(process, runOnMC=True, addAK4=False, addAK8=True)
     addNoLep(process, runOnMC=True)
+    process.NANOAODSIMoutput.fakeNameForCrab = cms.untracked.bool(True)  # needed for crab publication
+    return process
+
+def PFnano_customizeMC_AK15JetsOnly(process):
+    #add_BTV(process, runOnMC=True, addAK4=False, addAK8=False, addAK15=True)
+    addPFCands(process, runOnMC=True, saveAK15=True)
     process.NANOAODSIMoutput.fakeNameForCrab = cms.untracked.bool(True)  # needed for crab publication
     return process
 

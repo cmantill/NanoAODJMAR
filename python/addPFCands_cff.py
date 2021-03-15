@@ -43,6 +43,7 @@ def addPFCands(process, runOnMC=False, saveAll=False, saveAK4=False, saveAK8=Fal
                                                        src = candList, 
                                                        skipNulls = cms.bool(True), 
                                                        warnOnSkip = cms.bool(True))
+        candInput = cms.InputTag("finalJetsConstituents")
 
     process.customConstituentsExtTable = cms.EDProducer("SimpleCandidateFlatTableProducer",
                                                         src = candInput,
