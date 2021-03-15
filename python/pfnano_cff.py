@@ -31,7 +31,6 @@ def PFnano_customizeMC_AK8JetsOnly(process):
     return process
 
 def PFnano_customizeMC_AK15JetsOnly(process):
-    #add_BTV(process, runOnMC=True, addAK4=False, addAK8=False, addAK15=True)
     addPFCands(process, runOnMC=True, saveAK15=True)
     process.NANOAODSIMoutput.fakeNameForCrab = cms.untracked.bool(True)  # needed for crab publication
     return process
@@ -64,6 +63,11 @@ def PFnano_customizeData_AK8JetsOnly(process):
     addPFCands(process, runOnMC=False, saveAK4=True)
     addNoLep(process, False)
     add_BTV(process, runOnMC=False, addAK4=False, addAK8=True)
+    process.NANOAODSIMoutput.fakeNameForCrab = cms.untracked.bool(True)  # needed for crab publication
+    return process
+
+def PFnano_customizeData_AK15JetsOnly(process):
+    addPFCands(process, runOnMC=False, saveAK15=True)
     process.NANOAODSIMoutput.fakeNameForCrab = cms.untracked.bool(True)  # needed for crab publication
     return process
 
