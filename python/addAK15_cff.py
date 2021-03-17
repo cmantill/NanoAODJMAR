@@ -38,8 +38,7 @@ def setupAK15(process, runOnMC=False, path=None, runParticleNetMD=True):
 
     from PhysicsTools.PatAlgos.tools.jetTools import updateJetCollection
     from RecoBTag.ONNXRuntime.pfParticleNet_cff import _pfParticleNetJetTagsProbs as pfParticleNetJetTagsProbs
-    ak15_flav_names = ["probQCDothers", "probXbb", "probXcc", "probXqq"] 
-    pfMassDecorrelatedParticleNetJetTagsProbs = ['pfMassDecorrelatedParticleNetJetTags:' + n for n in ak15_flav_names]  # FIXME
+    from RecoBTag.ONNXRuntime.pfParticleNet_cff import _pfMassDecorrelatedParticleNetJetTagsProbs as pfMassDecorrelatedParticleNetJetTagsProbs
     bTagDiscriminators += pfParticleNetJetTagsProbs
     if runParticleNetMD:
         bTagDiscriminators += pfMassDecorrelatedParticleNetJetTagsProbs
@@ -57,14 +56,20 @@ def setupAK15(process, runOnMC=False, path=None, runParticleNetMD=True):
     )
 
     from RecoBTag.ONNXRuntime.pfParticleNet_cff import pfMassDecorrelatedParticleNetJetTags
+    #from RecoBTag.ONNXRuntime.pfDeepBoostedJet_cff import pfDeepBoostedJetTags 
     if runParticleNetMD:
         process.pfParticleNetTagInfosAK15ParticleNet.jet_radius = 1.5
+        #from PhysicsTools.PFNano.pfMassDecorrelatedParticleNetPreprocessParamsAK15_cfi import pfMassDecorrelatedParticleNetPreprocessParamsAK15
+        #process.pfMassDecorrelatedParticleNetJetTagsAK15ParticleNet = pfDeepBoostedJetTags.clone(
         process.pfMassDecorrelatedParticleNetJetTagsAK15ParticleNet = pfMassDecorrelatedParticleNetJetTags.clone(
             src = process.pfMassDecorrelatedParticleNetJetTagsAK15ParticleNet.src,
-            flav_names = ak15_flav_names,
+            #flav_names = ak15_flav_names,
+            #preprocess_json = pfMassDecorrelatedParticleNetPreprocessParamsAK15,
+            #preprocessParams = pfMassDecorrelatedParticleNetPreprocessParamsAK15,
+            #model_path = 'PhysicsTools/PFNano/data/ParticleNet-MD/ak15/ParticleNetMD.onnx',
             preprocess_json = 'PhysicsTools/PFNano/data/ParticleNet-MD/ak15/preprocess.json',
-            model_path = 'PhysicsTools/PFNano/data/ParticleNet-MD/ak15/ParticleNetMD.onnx',
-            debugMode=True
+            model_path = 'PhysicsTools/PFNano/data/ParticleNet-MD/ak15/particle-net.onnx',
+            #debugMode=True
             )
 
     # src
