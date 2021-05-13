@@ -151,10 +151,13 @@ def main():
         cond = job.split('/')[2]
         datatier = job.split('/')[3]
         requestname = ptbin + '_' + cond
+        print('cond ',cond)
         if len(requestname) > 93:
             requestname = ''.join((requestname[:93-len(requestname)]).split('_')[:-1])
             if 'ext' in cond and not 'ext' in requestname:
                 requestname = requestname + '_' + cond.split('_')[-1]
+            if 'batch2' in cond:
+                 requestname = requestname + '_batch2'  
         print('requestname = ', requestname)
         config.General.requestName = requestname
         config.Data.inputDataset = job
@@ -162,7 +165,8 @@ def main():
         print(config.Data.outputDatasetTag)
         config.Data.outLFNDirBase = options.out 
         config.Data.splitting = 'FileBased'
-        config.Data.unitsPerJob = 10
+        if options.private:
+            config.Data.unitsPerJob = 10
         if datatier == 'MINIAODSIM':
         #   config.Data.splitting = 'FileBased'
         #   config.Data.unitsPerJob = 10
@@ -184,7 +188,6 @@ def main():
             #submit(config)
         except :
             print('Not submitted.')
-
 
 
 if __name__ == '__main__':
