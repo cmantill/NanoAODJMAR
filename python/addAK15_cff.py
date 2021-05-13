@@ -225,10 +225,10 @@ def setupAK15(process, runOnMC=False, path=None, runParticleNetMD=True):
 #
 
 def PFnano_addAK15_data(process):
-    process.patJetsPuppi.addGenPartonMatch = cms.bool(False)
-    process.patJetsPuppi.addGenJetMatch = cms.bool(False)
-    process.patJetsPuppi.JetPartonMapSource = cms.InputTag("")
-    process.patJetsPuppi.JetFlavourInfoSource = cms.InputTag("")
+    #process.patJetsPuppi.addGenPartonMatch = cms.bool(False)
+    #process.patJetsPuppi.addGenJetMatch = cms.bool(False)
+    #process.patJetsPuppi.JetPartonMapSource = cms.InputTag("")
+    #process.patJetsPuppi.JetFlavourInfoSource = cms.InputTag("")
     setupAK15(process, runOnMC=False)
     return process
 
