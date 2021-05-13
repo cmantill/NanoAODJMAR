@@ -2,7 +2,11 @@
 # using: 
 # Revision: 1.19 
 # Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v 
+<<<<<<< HEAD
 # with command line options: nano_mc_2017_preUL --mc --eventcontent NANOAODSIM --datatier NANOAODSIM --step NANO --conditions 102X_mc2017_realistic_v8 --era Run2_2017,run2_nanoAOD_94XMiniAODv2 --customise_commands=process.add_(cms.Service('InitRootHandlers', EnableIMT = cms.untracked.bool(False))) --nThreads 4 -n 1000 --filein /store/mc/RunIIFall17MiniAODv2/TTToHadronic_TuneCP5_PSweights_13TeV-powheg-pythia8/MINIAODSIM/PU2017_12Apr2018_new_pmx_94X_mc2017_realistic_v14-v1/270000/B4131826-50C9-E811-852D-001E675811CC.root --fileout file:nano_mc2017.root --nThreads 1 --customise PhysicsTools/PFNano/pfnano_cff.PFnano_customizeMC --no_exec
+=======
+# with command line options: nano_mc_2017_preUL --mc --eventcontent NANOAODSIM --datatier NANOAODSIM --step NANO --conditions 102X_mc2017_realistic_v8 --era Run2_2017,run2_nanoAOD_94XMiniAODv2 --customise_commands=process.add_(cms.Service('InitRootHandlers', EnableIMT = cms.untracked.bool(False))) --nThreads 4 -n 1000 --filein /store/mc/RunIIFall17MiniAODv2/TTToHadronic_TuneCP5_PSweights_13TeV-powheg-pythia8/MINIAODSIM/PU2017_12Apr2018_new_pmx_94X_mc2017_realistic_v14-v1/270000/B4131826-50C9-E811-852D-001E675811CC.root --fileout file:nano_mc2017.root --customise PhysicsTools/PFNano/pfnano_cff.PFnano_customizeMC
+>>>>>>> 3b3007c2e0a499dfc1f9b0347203da01416e541a
 import FWCore.ParameterSet.Config as cms
 
 from Configuration.Eras.Era_Run2_2017_cff import Run2_2017
@@ -72,6 +76,10 @@ process.schedule = cms.Schedule(process.nanoAOD_step,process.endjob_step,process
 from PhysicsTools.PatAlgos.tools.helpers import associatePatAlgosToolsTask
 associatePatAlgosToolsTask(process)
 
+<<<<<<< HEAD
+=======
+#Setup FWK for multithreaded
+>>>>>>> 3b3007c2e0a499dfc1f9b0347203da01416e541a
 process.options.numberOfThreads=cms.untracked.uint32(4)
 process.options.numberOfStreams=cms.untracked.uint32(0)
 process.options.numberOfConcurrentLuminosityBlocks=cms.untracked.uint32(1)
@@ -86,11 +94,17 @@ process = nanoAOD_customizeMC(process)
 
 # Automatic addition of the customisation function from PhysicsTools.PFNano.pfnano_cff
 from PhysicsTools.PFNano.pfnano_cff import PFnano_customizeMC 
+<<<<<<< HEAD
 from PhysicsTools.PFNano.pfnano_cff import PFnano_customizeMC_AK8JetsOnly
 
 #call to customisation function PFnano_customizeMC imported from PhysicsTools.PFNano.pfnano_cff
 #process = PFnano_customizeMC(process)
 process = PFnano_customizeMC_AK8JetsOnly(process)
+=======
+
+#call to customisation function PFnano_customizeMC imported from PhysicsTools.PFNano.pfnano_cff
+process = PFnano_customizeMC(process)
+>>>>>>> 3b3007c2e0a499dfc1f9b0347203da01416e541a
 
 # End of customisation functions
 

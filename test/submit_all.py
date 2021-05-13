@@ -7,7 +7,6 @@ import os
 import re
 import sys
 import re
-#from optparse import OptionParser
 import argparse
 
 def make_list(option, opt, value, parser):
@@ -21,10 +20,9 @@ def getOptions() :
 
     parser = argparse.ArgumentParser(usage=usage)
     parser.add_argument("-c", "--config", dest="cfg", required=True,
-        help=("The crab script you want to submit "))
-    parser.add_argument("-d", "--dir", dest="dir", 
-        default="crab_dir",
-        help=("The crab directory you want to use"))
+        help=("CMSSW job configuration file"))
+    parser.add_argument("-d", "--dir", dest="dir", required=True,
+        help=("Crab working dir, e.g. 'crab_dir'"))
     parser.add_argument("-f", "--datasets", dest="datasets", required=True,
         help=("File listing datasets to run over"))
     parser.add_argument("-o", "--output", dest="out", 
@@ -73,7 +71,7 @@ def getOptions() :
     if options.extension is None:
         if raw_input('`--extension` is not specified. "PFNano" will be appended by default. Continue? (y/n)') != "y":
             exit()
-        options.extension == 'PFNanoAOD'
+        options.extension = 'PFNanoAOD'
     return options
 
 
