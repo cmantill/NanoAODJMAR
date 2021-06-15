@@ -191,7 +191,7 @@ def addNoLep(process, runOnMC=False):
         jetToolbox(process, 'ak8',  'leptonSubtractedJetSequence','noOutput',PUMethod = 'Puppi', postFix='NoLep',
                    newPFCollection=True, nameNewPFCollection='leptonLesspuppi',
                    JETCorrPayload = 'AK8PFPuppi', JETCorrLevels = JETCorrLevels,
-                   Cut='pt > 140.0 && abs(rapidity()) < 2.4', miniAOD=True,
+                   Cut='pt > 140.0 && abs(rapidity()) < 2.4', dataTier='miniAOD',
                    runOnMC=runOnMC, addSoftDrop=True, addSoftDropSubjets=True,
                    addNsub=True, maxTau=4,
                    GetSubjetMCFlavour=False,GetJetMCFlavour=False,
