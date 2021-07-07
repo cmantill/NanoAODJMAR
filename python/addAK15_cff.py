@@ -121,7 +121,7 @@ def setupAK15(process, runOnMC=False, path=None, runParticleNetMD=True):
             jetId=Var("userInt('tightId')*2+4*userInt('tightIdLepVeto')", int, doc="Jet ID flags bit1 is loose (always false in 2017 since it does not exist), bit2 is tight, bit3 is tightLepVeto"),
             area=Var("jetArea()", float, doc="jet catchment area, for JECs", precision=10),
             rawFactor=Var("1.-jecFactor('Uncorrected')", float, doc="1 - Factor to get back to raw pT", precision=6),
-            nPFConstituents=Var("numberOfDaughters()", int, doc="Number of PF candidate constituents"),
+            nConstituents=Var("numberOfDaughters()", int, doc="Number of PF candidate constituents"),
             tau1=Var("userFloat('NjettinessAK15Puppi:tau1')", float, doc="Nsubjettiness (1 axis)", precision=10),
             tau2=Var("userFloat('NjettinessAK15Puppi:tau2')", float, doc="Nsubjettiness (2 axis)", precision=10),
             tau3=Var("userFloat('NjettinessAK15Puppi:tau3')", float, doc="Nsubjettiness (3 axis)", precision=10),
