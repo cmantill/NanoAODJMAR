@@ -17,15 +17,9 @@ For **UL** 2016, 2017 and 2018 data and MC **NanoAODv8** according to the [XPOG]
 cmsrel  CMSSW_10_6_19
 cd CMSSW_10_6_19/src
 cmsenv
-#git cms-rebase-topic andrzejnovak:614nosort
-#git clone https://github.com/cms-jet/PFNano.git PhysicsTools/PFNano
-#git cms-addpkg PhysicsTools/NanoAOD
-#git cms-addpkg RecoBTag/Combined
-#git cms-merge-topic andrzejnovak:DDXV2_106
+git cms-addpkg RecoBTag/Combined
 git cms-merge-topic andrzejnovak:614nosort
-git clone https://github.com/cms-data/RecoBTag-Combined.git RecoBTag/Combined/data
 git clone https://github.com/cmantill/PFNano.git PhysicsTools/PFNano
-#git clone https://github.com/cms-jet/PFNano.git PhysicsTools/PFNano
 scram b -j 10
 cd PhysicsTools/PFNano/test
 ```
