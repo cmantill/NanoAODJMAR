@@ -105,6 +105,30 @@ def addPFCands(process, runOnMC=False, saveAll=False, saveAK4=False, saveAK8=Fal
 
     if runOnMC:
 
+        process.customGenJetAK8Table = cms.EDProducer("SimpleCandidateFlatTableProducer",
+            src=cms.InputTag("ak8GenJetsNoNuSoftDrop"),
+            cut=cms.string("pt > 100."),
+            name=cms.string("CustomGenJetAK8"),
+            doc=cms.string("AK8 GenJets made with visible genparticles"),
+            singleton=cms.bool(False),  # the number of entries is variable
+            extension=cms.bool(False),  # this is the main table for the genjets
+            variables=cms.PSet(P4Vars,
+            )
+        )
+        process.customGenJetAK8Table.variables.pt.precision = 10
+
+        process.customGenJetAK15Table = cms.EDProducer("SimpleCandidateFlatTableProducer",
+            src=cms.InputTag("ak15GenJetsNoNuSoftDrop"),
+            cut=cms.string("pt > 100."),
+            name=cms.string("CustomGenJetAK15"),
+            doc=cms.string("AK15 GenJets made with visible genparticles"),
+            singleton=cms.bool(False),
+            extension=cms.bool(False),
+            variables=cms.PSet(P4Vars,
+            )
+        )
+        process.customGenJetAK15Table.variables.pt.precision = 10
+
         process.genJetsAK8Constituents = cms.EDProducer("GenJetPackedConstituentPtrSelector",
                                                     src = cms.InputTag("slimmedGenJetsAK8"),
                                                     cut = cms.string("pt > 100.")
@@ -173,6 +197,8 @@ def addPFCands(process, runOnMC=False, saveAll=False, saveAK4=False, saveAK8=Fal
                                                          idx_nameSV = cms.string("sVIdx"),
                                                          readBtag = cms.bool(False))
 
+        process.customizedPFCandsTask.add(process.customGenJetAK8Table)
+        process.customizedPFCandsTask.add(process.customGenJetAK15Table)
         process.customizedPFCandsTask.add(process.genJetsAK4Constituents) #Note: For gen need to add jets to the process to keep pt cuts.
         process.customizedPFCandsTask.add(process.genJetsAK8Constituents)
         process.customizedPFCandsTask.add(process.genJetsAK15Constituents)
